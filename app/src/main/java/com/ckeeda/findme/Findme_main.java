@@ -76,9 +76,6 @@ public class Findme_main extends Activity {
         {
             String msg = getIntent().getStringExtra(Message_receiver.MESSAGE_BODY);
             String msg_sender = getIntent().getStringExtra(Message_receiver.MESSAGE_SENDER);
-            Log.v("MAIN",msg);
-
-
             if(msg.equalsIgnoreCase("normal")) {
                 Log.v("MAIN NORMAL",msg);
                 toNormalmode();
