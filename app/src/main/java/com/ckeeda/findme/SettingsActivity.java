@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,10 +38,21 @@ import java.util.List;
  */
 public class SettingsActivity extends PreferenceActivity {
 
+    private static List<String> fragments = new ArrayList<String>();
+
+
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        return true;
+        //return fragments.contains(fragmentName);
+      //  return GeneralPreferenceFragment.class.getClass().equals(fragmentName);
+     //   return super.isValidFragment(fragmentName);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState)     {
         super.onCreate(savedInstanceState);
-      setupActionBar();
+          setupActionBar();
     //    addPreferencesFromResource(R.xml.pref_general);
 
 //        bindPreferenceSummaryToValue(findPreference("start_app"));
@@ -79,6 +91,7 @@ public class SettingsActivity extends PreferenceActivity {
             //
             // TODO: If Settings has multiple levels, Up should navigate up
             // that hierarchy.
+
             NavUtils.navigateUpFromSameTask(this);
             //NavUtils.navigateUpFromSameTask(this);
             return true;
@@ -202,6 +215,8 @@ public class SettingsActivity extends PreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
+
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -217,7 +232,26 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
 
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                // This ID represents the Home or Up button. In the case of this
+                // activity, the Up button is shown. Use NavUtils to allow users
+                // to navigate up one level in the application structure. For
+                // more details, see the Navigation pattern on Android Design:
+                //
+                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+                //
+                // TODO: If Settings has multiple levels, Up should navigate up
+                // that hierarchy.
 
+                NavUtils.navigateUpFromSameTask(getActivity());
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
 
     }
 
