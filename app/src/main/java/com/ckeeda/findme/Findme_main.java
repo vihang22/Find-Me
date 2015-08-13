@@ -5,7 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.AudioManager;
+import android.os.AsyncTask;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.renderscript.RenderScript;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -15,7 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.w3c.dom.*;
 import org.w3c.dom.Text;
 
 
@@ -25,7 +33,9 @@ public class Findme_main extends Activity {
     ImageView image;
     IntentFilter sms_received;
     AudioManager audioManager;
+    LocationManager locationmanager;
     int device_ring_mode;
+    String human_readable_address;
 
 
     BroadcastReceiver msg_receiver = new BroadcastReceiver(){
@@ -33,6 +43,9 @@ public class Findme_main extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            String normal = pref.getString("normal_mode","normal");
+            String silent = pref.getString("silent_mode", "silent");
             init();
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -41,13 +54,18 @@ public class Findme_main extends Activity {
 
             String sender = Message.getOriginatingAddress();
             String message_body = Message.getDisplayMessageBody();
-            if(message_body.equalsIgnoreCase("normal")) {
+
+            if(message_body.equalsIgnoreCase(normal)) {
+                Log.v("RECEIVER", message_body);
                 toNormalmode();
                 setMessageData(message_body, sender);
+                new address_location().execute();
             }
-            if(message_body.equalsIgnoreCase("silent")) {
+            if(message_body.equalsIgnoreCase(silent)) {
+                Log.v("RECEIVER", message_body);
                 toSilentmode();
                 setMessageData(message_body, sender);
+                new address_location().execute();
             }
 
         }
@@ -58,6 +76,9 @@ public class Findme_main extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_findme_main);
         Log.v("Main", "Starting");
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String normal = pref.getString("normal_mode","normal");
+        String silent = pref.getString("silent_mode", "silent");
         init();
      /*   text_msg = (TextView)findViewById(R.id.message);
         sender = (TextView)findViewById(R.id.sender);
@@ -76,15 +97,17 @@ public class Findme_main extends Activity {
         {
             String msg = getIntent().getStringExtra(Message_receiver.MESSAGE_BODY);
             String msg_sender = getIntent().getStringExtra(Message_receiver.MESSAGE_SENDER);
-            if(msg.equalsIgnoreCase("normal")) {
-                Log.v("MAIN NORMAL",msg);
+            if(msg.equalsIgnoreCase(normal)) {
+                Log.v("MAIN NORMAL", msg);
                 toNormalmode();
                 setMessageData(msg, msg_sender);
+                new address_location().execute();
             }
-            if(msg.equalsIgnoreCase("silent")) {
+            if(msg.equalsIgnoreCase(silent)) {
                 Log.v("MAIN SLIENT",msg);
                 toSilentmode();
                 setMessageData(msg, msg_sender);
+                new address_location().execute();
             }
         }
         sms_received = new IntentFilter();
@@ -92,6 +115,72 @@ public class Findme_main extends Activity {
 
 
     }
+
+    class address_location extends AsyncTask<Void,Void,String>{
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            Looper.prepare();
+              Location_Tracker location_tracker = new Location_Tracker(getApplicationContext());
+              if(location_tracker.location_found) {
+                  double lat = location_tracker.current_location.getLatitude();
+                  double longi = location_tracker.current_location.getLongitude();
+
+                  human_readable_address = gethumanreadableaddress(location_tracker.current_location);
+                  Log.v("LOCATION","HUMAN READABLE:" + human_readable_address);
+                  return human_readable_address;
+              }
+            Looper.loop();
+           return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+        }
+    }
+    private String gethumanreadableaddress(Location location) {
+        // TODO Auto-generated method stub
+
+        String KEY_RESULTS = "result";
+        String KEY_ADDRESES = "formatted_address";
+        String map;
+
+
+        String lat = Double.toString(location.getLatitude());
+        String longi = Double.toString(location.getLongitude());
+
+
+        String Url = "http://maps.googleapis.com/maps/api/geocode/xml?latlng="+lat+","+longi+"&sensor=true";
+
+        XmlParser_for_current_address xmlParser = new XmlParser_for_current_address();
+
+        String xml = xmlParser.getXmlFromUrl(Url);
+
+        Document doc = xmlParser.getDataFromXml(xml);
+
+        NodeList nl = doc.getElementsByTagName(KEY_RESULTS);
+
+        Element el = (Element)nl.item(0);
+
+        NodeList nl1 = el.getElementsByTagName(KEY_ADDRESES);
+
+        Element el1 = (Element)nl1.item(0);
+
+        nl1 = el1.getChildNodes();
+
+        map = nl1.item(0).getNodeValue();
+
+
+
+        return map;
+
+
+
+    }
+
+
 
     void init(){
         text_msg = (TextView)findViewById(R.id.message);
@@ -147,7 +236,8 @@ public class Findme_main extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent setting = new Intent(this,SettingsActivity.class);
+            startActivity(setting);
         }
 
         return super.onOptionsItemSelected(item);

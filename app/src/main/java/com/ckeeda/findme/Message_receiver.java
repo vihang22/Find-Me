@@ -3,6 +3,8 @@ package com.ckeeda.findme;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,6 +18,8 @@ public class Message_receiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         //throw new UnsupportedOperationException("Not yet implemented");
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        String start = pref.getString("start_app","start");
 
         Object[] pdus=(Object[])intent.getExtras().get("pdus");
         SmsMessage Message=SmsMessage.createFromPdu((byte[]) pdus[0]);
@@ -34,14 +38,14 @@ public class Message_receiver extends BroadcastReceiver {
             String[] msg = message_body.split("\\s+");
             Log.v("Split", String.valueOf(msg.length));
 
-            if(msg[0].equalsIgnoreCase("start")) {
+            if(msg[0].equalsIgnoreCase(start)) {
                 Log.v("RECEIVER",msg[1]);
                 start_main_activity.putExtra(MESSAGE_BODY,msg[1]);
                 context.startActivity(start_main_activity);
             }
         }else {
             Log.v("RECEIVER", "1 WORD");
-            if (message_body.equalsIgnoreCase("start")) {
+            if (message_body.equalsIgnoreCase(start)) {
                 start_main_activity.putExtra(MESSAGE_BODY, message_body);
                 context.startActivity(start_main_activity);
             }
