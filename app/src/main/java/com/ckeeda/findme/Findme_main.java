@@ -117,38 +117,6 @@ public class Findme_main extends Activity {
         sms_received = new IntentFilter();
         sms_received.addAction("android.provider.Telephony.SMS_RECEIVED");
 
-/*
-        // Register broadcast receivers for SMS sent and delivered intents
-        registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String message = null;
-                boolean error = true;
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        message = "Message sent!";
-                        error = false;
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        message = "Error.";
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        message = "Error: No service.";
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        message = "Error: Null PDU.";
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        message = "Error: Radio off.";
-                        break;
-                }
-                Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
-
-
-            }
-        }, new IntentFilter(ACTION_SMS_SENT));
-    }
-*/
 
     }
 
@@ -186,7 +154,8 @@ public class Findme_main extends Activity {
 
     void sendmsg(String sender,String message,Location loc){
         if(loc != null) {
-            String msg = "Lat:" + loc.getLatitude() + ",Long:" + loc.getLongitude() + "\nAddress:" + message;
+            String msg = "Address:" + message +
+                    "Google Map: http://maps.google.com/?q=+"+loc.getLatitude()+","+loc.getLongitude();
             Log.v("SEND MSG", sender);
             Log.v("SEND MSG", msg);
             SmsManager sms = SmsManager.getDefault();
@@ -242,6 +211,8 @@ public class Findme_main extends Activity {
     }
 
     void toSilentmode(){
+        audioManager.setStreamVolume(AudioManager.STREAM_RING,
+                AudioManager.ADJUST_LOWER,AudioManager.FLAG_ALLOW_RINGER_MODES|AudioManager.RINGER_MODE_VIBRATE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
         audioManager.setRingerMode(AudioManager.FLAG_VIBRATE);
         image.setImageResource(R.mipmap.silent);
