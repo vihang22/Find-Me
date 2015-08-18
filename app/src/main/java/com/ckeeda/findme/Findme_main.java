@@ -256,7 +256,7 @@ public class Findme_main extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent setting = new Intent(this,SettingsActivity.class);
-            startActivity(setting);
+             startActivity(setting);
         }
 
         return super.onOptionsItemSelected(item);

@@ -4,7 +4,6 @@
 
     <header android:fragment="com.ckeeda.findme.SettingsActivity$GeneralPreferenceFragment"
         android:title="General"
-        android:breadCrumbTitle="Vihang"
         android:icon="@mipmap/find_me_icon"
         />
 
