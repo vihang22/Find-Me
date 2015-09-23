@@ -13,8 +13,6 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.renderscript.RenderScript;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;

@@ -4,7 +4,7 @@
 
     <header android:fragment="com.ckeeda.findme.SettingsActivity$GeneralPreferenceFragment"
         android:title="General"
-        android:icon="@mipmap/find_me_icon"
+        android:icon="@mipmap/setting"
         />
 
     <!--   <header android:fragment="com.ckeeda.findme.SettingsActivity$NotificationPreferenceFragment"
