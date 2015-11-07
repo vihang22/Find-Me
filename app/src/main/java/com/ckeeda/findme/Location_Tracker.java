@@ -31,8 +31,8 @@ public class Location_Tracker implements LocationListener {
         if(isGPSEnable){
             Log.v("LOCATION", "IN GPS");
             current_location = location.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-         //   location.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
-//            Log.v("LOCTION",current_location.toString());
+            location.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
+
             if(current_location != null) {
                 location_found = true;
                 Log.v("LOCATION","LATITUDE:"+current_location.getLatitude());
