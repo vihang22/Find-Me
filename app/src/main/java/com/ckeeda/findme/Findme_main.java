@@ -100,13 +100,13 @@ public class Findme_main extends Activity {
             String msg = getIntent().getStringExtra(Message_receiver.MESSAGE_BODY);
             String msg_sender = getIntent().getStringExtra(Message_receiver.MESSAGE_SENDER);
             if (msg.equalsIgnoreCase(normal)) {
-                Log.v("MAIN NORMAL", msg);
+                Log.i("MAIN NORMAL", msg);
                 toNormalmode();
                 setMessageData(msg, msg_sender);
                 new address_location().execute(msg_sender);
             }
             if (msg.equalsIgnoreCase(silent)) {
-                Log.v("MAIN SLIENT", msg);
+                Log.i("MAIN SLIENT", msg);
                 toSilentmode();
                 setMessageData(msg, msg_sender);
                 new address_location().execute(msg_sender);
@@ -123,7 +123,7 @@ public class Findme_main extends Activity {
         Boolean flag;
         @Override
         protected String doInBackground(String... str) {
-            Looper.prepare();
+         //   Looper.prepare();
               Location_Tracker location_tracker = new Location_Tracker(getApplicationContext());
                 human_readable_address = "Sorry...Location not found...";
               if(location_tracker.location_found) {
@@ -137,9 +137,10 @@ public class Findme_main extends Activity {
 
               }
 
-            Looper.loop();
+
             sendmsg(str[0],human_readable_address,null);
             return human_readable_address;
+         //   Looper.loop();
         }
 
         @Override
@@ -153,7 +154,7 @@ public class Findme_main extends Activity {
     void sendmsg(String sender,String message,Location loc){
         if(loc != null) {
             String msg = "Address:" + message +
-                    "Google Map: http://maps.google.com/?q=+"+loc.getLatitude()+","+loc.getLongitude();
+                    "\n Google Map: http://maps.google.com/?q=+"+loc.getLatitude()+","+loc.getLongitude();
             Log.v("SEND MSG", sender);
             Log.v("SEND MSG", msg);
             SmsManager sms = SmsManager.getDefault();

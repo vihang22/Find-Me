@@ -16,8 +16,8 @@ public class Location_Tracker implements LocationListener {
     Context context;
     boolean isGPSEnable = false;
     boolean isNWEnable = false;
-    boolean location_found = false;
-    Location current_location;
+    static boolean location_found = false;
+    static Location current_location;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
     LocationManager location;
@@ -31,15 +31,17 @@ public class Location_Tracker implements LocationListener {
         if(isGPSEnable){
             Log.v("LOCATION", "IN GPS");
             current_location = location.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            location.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
-
+         //   location.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
+//            Log.v("LOCTION",current_location.toString());
             if(current_location != null) {
                 location_found = true;
                 Log.v("LOCATION","LATITUDE:"+current_location.getLatitude());
                 Log.v("LOCATION","LONGITUDE:"+current_location.getLongitude());
+            }else {
+                Log.v("LOCATION", "LOCATION NOT FOUND");
+                current_location  = null;
+                location_found = false;
             }
-            else
-                Log.v("LOCATION","LOCATION NOT FOUND");
         }
 
         else if(isNWEnable){
@@ -49,7 +51,8 @@ public class Location_Tracker implements LocationListener {
             if(current_location != null)
                 location_found = true;
             else
-                Log.v("LOCATION","LOCATION NOT FOUND");
+                Log.v("LOCATION", "LOCATION NOT FOUND");
+
         }
 
     }

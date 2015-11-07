@@ -6,7 +6,7 @@
             android:defaultValue="start"
             android:dialogMessage="Enter keyword to Start Application"
             android:inputType="text"
-            android:capitalize="words"
+            android:capitalize="characters"
             android:singleLine="true"
             android:maxLines="1" />
 
@@ -18,7 +18,7 @@
             android:defaultValue="normal"
             android:dialogMessage="Enter keyword for Ringer Mode"
             android:inputType="text"
-            android:capitalize="words"
+            android:capitalize="characters"
             android:singleLine="true"
             android:maxLines="1" />
 
@@ -28,7 +28,7 @@
             android:defaultValue="silent"
             android:dialogMessage="Enter keyword for Silent Mode"
             android:inputType="text"
-            android:capitalize="words"
+            android:capitalize="characters"
             android:singleLine="true"
             android:maxLines="1" />
 
