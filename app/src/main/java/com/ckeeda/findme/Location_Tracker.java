@@ -50,9 +50,11 @@ public class Location_Tracker implements LocationListener {
             location.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
             if(current_location != null)
                 location_found = true;
-            else
+            else{
                 Log.v("LOCATION", "LOCATION NOT FOUND");
-
+                current_location  = null;
+                location_found = false;
+            }
         }
 
     }
